@@ -351,7 +351,7 @@ async function loadLive(){
           <td class="c mono" style="font-size:12px;color:var(--gray-dk)">${p.thru||'–'}</td>
         </tr>`;
       }).join('');
-    const ss=TEAMS.map(t=>{let tot=0;t.players.forEach(n=>{const p=data.players.find(ap=>norm(ap.name)===norm(n));if(p&&!p.isCut&&!p.isWD){const v=parseInt(p.toPar);if(!isNaN(v))tot+=v;}});return{owner:t.owner,tot};}).sort((a,b)=>a.tot-b.tot);
+    const ss=TEAMS.map(t=>{let tot=0;t.players.forEach(n=>{const p=data.players.find(ap=>norm(ap.name)===norm(n));if(p&&!p.isCut&&!p.isWD){const raw=p.toPar;const v=/^e$/i.test(raw)?0:parseInt(raw);if(!isNaN(v))tot+=v;}});return{owner:t.owner,tot};}).sort((a,b)=>a.tot-b.tot);
     document.getElementById('ss-strip').innerHTML=ss.map((s,i)=>{
       const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
       const rl=i===0?'🥇 1st':i===1?'🥈 2nd':i===2?'🥉 3rd':`${i+1}th`;
@@ -435,11 +435,26 @@ function renderPayouts(){
   });
   const sorted=[...teamData].sort((a,b)=>b.pts-a.pts);
   const totalPts=sorted.reduce((s,t)=>s+t.pts,0);
+  // Calculate major bonuses per owner
+  const bonusMap={};
+  const bonusEvsList=[
+    {key:'Masters Tournament',amt:50},{key:'PGA Championship',amt:50},
+    {key:'U.S. Open',amt:50},{key:'The Open Championship',amt:50},{key:'Tour Championship',amt:100}
+  ];
+  bonusEvsList.forEach(ev=>{
+    const winner=winners[norm(ev.key)]||null;
+    const owner=winner?getOwner(winner):null;
+    if(owner){bonusMap[owner]=(bonusMap[owner]||0)+ev.amt;}
+  });
+
   document.getElementById('standings').innerHTML=sorted.map((t,i)=>{
     const pct=totalPts>0?t.pts/totalPts:0;
-    const payout=(pct*SEASON_POT).toFixed(2);
+    const seasonPayout=pct*SEASON_POT;
+    const majorBonus=bonusMap[t.owner]||0;
+    const total=seasonPayout+majorBonus;
     const barPct=sorted[0].pts>0?Math.round((t.pts/sorted[0].pts)*100):0;
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+    const fmtMoney=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     return`<div class="s-row">
       <div class="s-rnk ${rc}">${i+1}</div>
       <div class="s-info">
@@ -447,7 +462,20 @@ function renderPayouts(){
         <div class="s-sub">${t.pts.toFixed(1)} pts · ${(pct*100).toFixed(1)}% of league</div>
         <div class="pay-bar"><div class="pay-bar-f" style="width:${barPct}%"></div></div>
       </div>
-      <div class="s-pay">$${payout}</div>
+      <div style="display:flex;gap:16px;align-items:center;margin-left:auto;text-align:right">
+        <div>
+          <div style="font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Season</div>
+          <div class="s-pay" style="font-size:15px">${fmtMoney(seasonPayout)}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Bonuses</div>
+          <div class="s-pay" style="font-size:15px;color:var(--gold)">${majorBonus>0?fmtMoney(majorBonus):'—'}</div>
+        </div>
+        <div style="border-left:1px solid var(--gray-lt);padding-left:16px">
+          <div style="font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Total</div>
+          <div class="s-pay">${fmtMoney(total)}</div>
+        </div>
+      </div>
     </div>`;
   }).join('');
   document.getElementById('pay-upd').textContent=totalPts===0?'No earnings data yet.':'Auto-updated from ESPN · '+new Date().toLocaleTimeString();
