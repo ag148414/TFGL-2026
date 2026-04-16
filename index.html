@@ -398,16 +398,19 @@ function renderTeams(earnMap){
 }
 
 async function initTeams(){
-  // If we already have earnings cached, render immediately
   if(_earnings){renderTeams(_earnings.earnMap);return;}
-  // Otherwise fetch earnings then render
   renderTeams({});
   try{
-    const data=await fetch(`${WORKER}?type=earnings`).then(r=>r.json());
+    const binData=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json());
     const earnMap={};
-    (data.players||[]).forEach(p=>{earnMap[norm(p.name)]=p.earnings;});
+    const storedTournaments=binData?.record?.tournaments||[];
+    storedTournaments.forEach(t=>{
+      if(!t.completed) return;
+      Object.entries(t.earnings||{}).forEach(([player,amt])=>{
+        earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
+      });
+    });
     renderTeams(earnMap);
-    // Cache for payouts tab too
     if(!_earnings){
       const schedData=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
       const winners={};
@@ -454,14 +457,26 @@ async function initPayouts(){
   if(_earnings){renderPayouts();return}
   show('pay-load');hide('pay-body');hide('pay-err');
   try{
-    const[earnData,schedData]=await Promise.all([
-      fetch(`${WORKER}?type=earnings`).then(r=>r.json()),
+    // Load tournament earnings from JSONbin (includes seeded historical + live data)
+    const[binData, schedData]=await Promise.all([
+      fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json()),
       fetch(`${WORKER}?type=schedule`).then(r=>r.json()),
     ]);
+
+    // Build earnings map from stored tournament data
     const earnMap={};
-    (earnData.players||[]).forEach(p=>{earnMap[norm(p.name)]=p.earnings;});
+    const storedTournaments = binData?.record?.tournaments || [];
+    storedTournaments.forEach(t=>{
+      if(!t.completed) return;
+      Object.entries(t.earnings||{}).forEach(([player,amt])=>{
+        earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
+      });
+    });
+
+    // Get schedule winners
     const winners={};
     (schedData.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
+
     _earnings={earnMap,winners};
     hide('pay-load');show('pay-body');
     renderPayouts();
