@@ -278,7 +278,7 @@ async function init(){
     TEAMS=d.record.teams;
     ALL_PLAYERS=TEAMS.flatMap(t=>t.players);
   }catch(e){console.error('JSONbin load failed:',e)}
-  renderTeams();
+  renderTeams({});
   renderScheduleTable({});
 }
 
@@ -363,16 +363,58 @@ async function loadLive(){
 }
 
 // TEAMS
-function renderTeams(){
+function renderTeams(earnMap){
   const grid=document.getElementById('teams-grid');
   if(!TEAMS.length){grid.innerHTML='<div class="loader"><p>Loading rosters…</p></div>';return}
+  const em=earnMap||{};
   grid.innerHTML=TEAMS.map(t=>{
     const init=t.owner.split(' ').map(w=>w[0]).join('');
+    let teamTotal=0;
+    const rows=t.players.map((p,i)=>{
+      const earn=em[norm(p)]||0;
+      teamTotal+=earn;
+      const earnStr=earn>0?'$'+earn.toLocaleString('en-US'):'—';
+      return`<div class="team-pl">
+        <span class="pl-num">${i+1}</span>
+        <span class="pl-nm">${p}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:${earn>0?'var(--green-dk)':'var(--gray-mid)'}">
+          ${earnStr}
+        </span>
+      </div>`;
+    }).join('');
+    const totalStr=teamTotal>0?'$'+teamTotal.toLocaleString('en-US'):'$0';
     return`<div class="team-card">
-      <div class="team-hdr"><div class="team-av">${init}</div><div class="team-own">${t.owner}</div></div>
-      <div class="team-bdy">${t.players.map((p,i)=>`<div class="team-pl"><span class="pl-num">${i+1}</span><span class="pl-nm">${p}</span></div>`).join('')}</div>
+      <div class="team-hdr">
+        <div class="team-av">${init}</div>
+        <div class="team-own">${t.owner}</div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:10px;color:var(--blue-lt);letter-spacing:1px;text-transform:uppercase">Season Earnings</div>
+          <div style="font-family:'DM Mono',monospace;font-size:16px;color:var(--gold);font-weight:500">${totalStr}</div>
+        </div>
+      </div>
+      <div class="team-bdy">${rows}</div>
     </div>`;
   }).join('');
+}
+
+async function initTeams(){
+  // If we already have earnings cached, render immediately
+  if(_earnings){renderTeams(_earnings.earnMap);return;}
+  // Otherwise fetch earnings then render
+  renderTeams({});
+  try{
+    const data=await fetch(`${WORKER}?type=earnings`).then(r=>r.json());
+    const earnMap={};
+    (data.players||[]).forEach(p=>{earnMap[norm(p.name)]=p.earnings;});
+    renderTeams(earnMap);
+    // Cache for payouts tab too
+    if(!_earnings){
+      const schedData=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
+      const winners={};
+      (schedData.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
+      _earnings={earnMap,winners};
+    }
+  }catch(e){console.error('Teams earnings fetch failed:',e);}
 }
 
 // SCHEDULE
