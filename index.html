@@ -371,7 +371,7 @@ function renderTeams(earnMap){
     const init=t.owner.split(' ').map(w=>w[0]).join('');
     let teamTotal=0;
     const rows=t.players.map((p,i)=>{
-      const earn=em[norm(p)]||0;
+      const earn=em[norm(p)]||em[p]||0;
       teamTotal+=earn;
       const pts=toPoints(earn);
       const earnStr=earn>0?'$'+earn.toLocaleString('en-US'):'—';
@@ -401,7 +401,6 @@ function renderTeams(earnMap){
 }
 
 async function initTeams(){
-  if(_earnings){renderTeams(_earnings.earnMap);return;}
   renderTeams({});
   try{
     const binData=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json());
@@ -411,6 +410,7 @@ async function initTeams(){
       if(!t.completed) return;
       Object.entries(t.earnings||{}).forEach(([player,amt])=>{
         earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
+        earnMap[player]=(earnMap[player]||0)+amt;
       });
     });
     renderTeams(earnMap);
