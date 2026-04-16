@@ -373,12 +373,15 @@ function renderTeams(earnMap){
     const rows=t.players.map((p,i)=>{
       const earn=em[norm(p)]||0;
       teamTotal+=earn;
+      const pts=toPoints(earn);
       const earnStr=earn>0?'$'+earn.toLocaleString('en-US'):'—';
+      const ptsStr=pts>0?pts.toFixed(1)+' pts':'';
       return`<div class="team-pl">
         <span class="pl-num">${i+1}</span>
         <span class="pl-nm">${p}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:12px;color:${earn>0?'var(--green-dk)':'var(--gray-mid)'}">
-          ${earnStr}
+        <span style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+          <span style="font-family:'DM Mono',monospace;font-size:12px;color:${earn>0?'var(--green-dk)':'var(--gray-mid)'}">${earnStr}</span>
+          ${ptsStr?`<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--gray-mid)">${ptsStr}</span>`:''}
         </span>
       </div>`;
     }).join('');
