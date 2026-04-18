@@ -271,15 +271,46 @@ function scClass(v){if(/cut/i.test(v))return'cut';if(/wd|dq/i.test(v))return'wd'
 function posClass(p){const n=parseInt(p);return n<=5?'t5':n<=10?'t10':''}
 function toPoints(d){if(!d||d<=0)return 0;return Math.round(d/10000)*10000/100000}
 
+// Global prefetch cache
+let _binData = null;
+
 async function init(){
   try{
     const r=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}});
     const d=await r.json();
+    _binData = d;
     TEAMS=d.record.teams;
     ALL_PLAYERS=TEAMS.flatMap(t=>t.players);
   }catch(e){console.error('JSONbin load failed:',e)}
   renderTeams({});
   renderScheduleTable({});
+  // Prefetch earnings + schedule in background so tabs load instantly
+  prefetchAll();
+}
+
+async function prefetchAll(){
+  // Prefetch earnings
+  try{
+    const earnMap={};
+    const storedTournaments=_binData?.record?.tournaments||[];
+    storedTournaments.forEach(t=>{
+      if(!t.completed) return;
+      Object.entries(t.earnings||{}).forEach(([player,amt])=>{
+        earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
+        earnMap[player]=(earnMap[player]||0)+amt;
+      });
+    });
+    // Prefetch schedule from worker
+    const schedData=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
+    const winners={};
+    (schedData.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
+    _earnings={earnMap,winners};
+    // Render teams with earnings now that we have them
+    renderTeams(earnMap);
+    // Render schedule with winners
+    renderScheduleTable(winners);
+    _schedLoaded=true;
+  }catch(e){console.warn('Prefetch failed:',e)}
 }
 
 function showTab(tab){
@@ -401,9 +432,12 @@ function renderTeams(earnMap){
 }
 
 async function initTeams(){
+  // If prefetch already ran, render immediately — no wait
+  if(_earnings){renderTeams(_earnings.earnMap);return;}
+  // Otherwise show empty then load
   renderTeams({});
   try{
-    const binData=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json());
+    const binData=_binData || await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json());
     const earnMap={};
     const storedTournaments=binData?.record?.tournaments||[];
     storedTournaments.forEach(t=>{
@@ -426,6 +460,12 @@ async function initTeams(){
 // SCHEDULE
 let _schedLoaded=false;
 async function initSchedule(){
+  // If prefetch already got winners, render instantly
+  if(_earnings?.winners){
+    renderScheduleTable(_earnings.winners);
+    document.getElementById('sched-upd').textContent='Champions auto-updated from ESPN · '+new Date().toLocaleTimeString();
+    return;
+  }
   if(_schedLoaded)return;
   try{
     const data=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
@@ -457,7 +497,7 @@ function renderScheduleTable(winners){
 
 // PAYOUTS
 async function initPayouts(){
-  if(_earnings){renderPayouts();return}
+  if(_earnings){hide('pay-load');show('pay-body');renderPayouts();return}
   show('pay-load');hide('pay-body');hide('pay-err');
   try{
     // Load tournament earnings from JSONbin (includes seeded historical + live data)
