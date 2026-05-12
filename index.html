@@ -513,26 +513,13 @@ function renderTeams() {
     return;
   }
 
-  // sort by earnings desc
-  const sorted = [...rosters].map(t => {
-    const total = t.players.reduce((s,p) => s + (earningsMap[p]||0), 0);
-    return { ...t, total };
-  }).sort((a,b) => b.total - a.total);
-
-  grid.innerHTML = sorted.map(t => `
+  grid.innerHTML = rosters.map(t => `
     <div class="team-card">
       <div class="team-header">
         <div class="team-owner">${t.owner}</div>
-        <div class="team-earnings">${t.total > 0 ? '$' + t.total.toLocaleString() + ' earned · ' + (t.total/100000).toFixed(1) + ' pts' : 'Season earnings loading…'}</div>
       </div>
       <ul class="team-players">
-        ${t.players.map(p => {
-          const earn = earningsMap[p] || 0;
-          return `<li>
-            <span>${p}</span>
-            ${earn > 0 ? `<span class="player-earn">$${(earn/1000).toFixed(0)}K</span>` : ''}
-          </li>`;
-        }).join('')}
+        ${t.players.map(p => `<li>${p}</li>`).join('')}
       </ul>
     </div>`).join('');
 
