@@ -386,14 +386,28 @@ function buildStandings() {
 }
 
 /* ─── LOAD ROSTERS ───────────────────────────── */
+const FALLBACK_ROSTERS = [
+  { owner: "Jake Ottaway",  players: ["Scottie Scheffler","Collin Morikawa","Viktor Hovland","Patrick Cantlay","Brooks Koepka","Sungjae Im","Jordan Spieth","Max Greyserman","Samuel Stevens","Jon Rahm"] },
+  { owner: "Aaron Cramer",  players: ["Cameron Young","Ludvig Aberg","Min Woo Lee","Sam Burns","Jake Knapp","Jason Day","Sahith Theegala","Ryo Hisatsune","Michael Brennan","Matti Schmid"] },
+  { owner: "Nick Knisley",  players: ["Matt Fitzpatrick","Jacob Bridgeman","Robert MacIntyre","Maverick McNealy","Nicolai Hojgaard","Ryan Gerard","Daniel Berger","Rickie Fowler","Andrew Novak","Chris Kirk"] },
+  { owner: "Adam Gill",     players: ["Rory McIlroy","Akshay Bhatia","Sepp Straka","J.J. Spaun","Corey Conners","Justin Thomas","Nicolas Echavarria","J.T. Poston","Austin Eckroat","Tom Hoge"] },
+  { owner: "Ryan Flick",    players: ["Xander Schauffele","Hideki Matsuyama","Tony Finau","Will Zalatoris","Shane Lowry","Brendan Steele","Davis Thompson","Denny McCarthy","Nick Taylor","Beau Hossler"] },
+  { owner: "Teddy Buck",    players: ["Tommy Fleetwood","Keegan Bradley","Si Woo Kim","Aaron Rai","Taylor Moore","Lanto Griffin","K.H. Lee","Doc Redman","Harrison Crowe","Emiliano Grillo"] }
+];
+
 async function loadRosters() {
   try {
-    const res = await fetch(JSONBIN, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+    const res = await fetch(JSONBIN, {
+      headers: { 'X-Master-Key': JSONBIN_KEY, 'X-Bin-Meta': 'false' }
+    });
+    if (!res.ok) throw new Error('JSONbin ' + res.status);
     const json = await res.json();
-    rosters = json.record.teams;
+    // X-Bin-Meta:false → response is the record directly (no wrapper)
+    rosters = json.teams || json.record?.teams || [];
+    if (!rosters.length) throw new Error('Empty roster data');
   } catch(e) {
-    console.warn('Roster load failed', e);
-    rosters = [];
+    console.warn('Roster load failed, using fallback:', e.message);
+    rosters = FALLBACK_ROSTERS;
   }
 }
 
@@ -423,14 +437,14 @@ async function loadLive() {
     const data = await res.json();
 
     // find current/most-recent event
-    const events = data.events || [];
-    const now = new Date();
-    let current = null;
-    for (const ev of events) {
-      const end = new Date(ev.endDate || ev.date);
-      if (end >= now || !current) current = ev;
-      if (new Date(ev.startDate || ev.date) <= now && end >= now) { current = ev; break; }
-    }
+    // data comes back as tournaments array from worker
+    const events = data.tournaments || data.events || [];
+
+    // Priority 1: first scheduled (not yet completed) tournament = current/upcoming
+    // Priority 2: last completed tournament (between weeks)
+    let current = events.find(e => !e.completed && e.status === 'Scheduled')
+                  || [...events].reverse().find(e => e.completed);
+
     if (!current) throw new Error('No event found');
 
     const lbRes  = await fetch(`${WORKER}?type=leaderboard&id=${current.id}`);
