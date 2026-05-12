@@ -227,41 +227,43 @@ tbody td.c { text-align: center; }
 /* ── TEAMS TAB ── */
 .teams-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 20px 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 .team-card {
   background: var(--white);
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(12,68,124,.08);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(12,68,124,.08);
   overflow: hidden;
 }
 .team-header {
   background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-  padding: 14px 18px;
+  padding: 10px 14px;
 }
-.team-owner { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--white); font-weight: 700; }
-.team-earnings { font-size: 12px; color: var(--blue-lt); margin-top: 2px; }
+.team-owner { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--white); font-weight: 700; }
 .team-players { list-style: none; }
 .team-players li {
-  padding: 9px 18px;
+  padding: 7px 14px;
   font-size: 13px;
   border-bottom: 1px solid var(--gray-lt);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
 }
 .team-players li:last-child { border-bottom: none; }
 .player-earn { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green-dk); font-weight: 500; }
-.playing-dot { color: var(--green); font-size: 10px; flex-shrink: 0; }
+.playing-dot { color: var(--green); font-size: 9px; flex-shrink: 0; }
 
 /* ── RESPONSIVE ── */
-@media(max-width:1000px){ .teams-grid { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:700px){
-  .teams-grid { grid-template-columns: 1fr; }
-  .standings-strip { grid-template-columns: repeat(3,1fr); }
+@media(max-width:600px){
+  .teams-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+  .team-players li { padding: 6px 12px; font-size: 12px; }
+  .team-header { padding: 8px 12px; }
+  .team-owner { font-size: 14px; }
   nav button { padding: 16px 10px; font-size: 10px; }
   .logo-text .sub { display: none; }
 }
