@@ -7,596 +7,535 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0C447C;--navy-dark:#082f57;--navy-mid:#1a5a9e;--blue-lt:#B5D4F4;--gold:#EF9F27;--green:#1D9E75;--green-dk:#0F6E56;--off-white:#F4F7FB;--gray-lt:#E8EEF6;--gray-mid:#9EB4CC;--gray-dk:#4a6280;--text:#0d1f33;--red:#d94444}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Source Sans 3',sans-serif;background:var(--off-white);color:var(--text);min-height:100vh}
-header{background:var(--navy);padding:0 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(8,47,87,.4);position:sticky;top:0;z-index:100;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:14px;padding:10px 0;cursor:pointer}
-.wordmark{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1}
-.logo-sub{font-size:9px;font-weight:600;color:var(--blue-lt);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
-nav{display:flex;flex-wrap:wrap}
-nav button{background:none;border:none;color:var(--blue-lt);font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:22px 13px;cursor:pointer;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap}
-nav button:hover{color:#fff;border-bottom-color:var(--blue-lt)}
-nav button.active{color:var(--gold);border-bottom-color:var(--gold)}
-main{max-width:1200px;margin:0 auto;padding:32px 20px 80px}
-.tab{display:none;animation:fi .2s ease}.tab.active{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.sec-hdr{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;border-bottom:2px solid var(--gray-lt);padding-bottom:16px;flex-wrap:wrap}
-.sec-hdr h1{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--navy)}
-.badge{background:var(--navy);color:#fff;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:4px 10px;border-radius:20px;text-transform:uppercase}
-.badge.live{background:var(--red);animation:pulse 2s infinite}.badge.final{background:var(--green-dk)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(12,68,124,.07),0 4px 20px rgba(12,68,124,.05);overflow:hidden}
-.tbl{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:14px}
-thead th{background:var(--navy);color:#fff;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;padding:11px 14px;text-align:left;white-space:nowrap}
-thead th.c{text-align:center}
-tbody tr{border-bottom:1px solid var(--gray-lt);transition:background .12s}
-tbody tr:hover{background:var(--off-white)}
-tbody td{padding:10px 14px;vertical-align:middle}tbody td.c{text-align:center}
-.mono{font-family:'DM Mono',monospace}
-.sc{font-family:'DM Mono',monospace;font-weight:500}
-.sc.un{color:#c0392b;font-weight:700}.sc.ov{color:var(--navy-mid)}.sc.ev{color:var(--gray-dk)}.sc.cut,.sc.wd{color:var(--gray-mid);font-style:italic}
-.chip{display:inline-block;min-width:34px;height:22px;line-height:22px;text-align:center;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;background:var(--gray-lt);color:var(--gray-dk)}
-.chip.t5{background:var(--gold);color:#5a3a00;font-weight:700}.chip.t10{background:var(--blue-lt);color:var(--navy-dark);font-weight:600}
-.loader{text-align:center;padding:60px 20px;color:var(--gray-dk)}
-.spin{width:34px;height:34px;border:3px solid var(--gray-lt);border-top-color:var(--navy);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 14px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.upd{font-size:11px;color:var(--gray-mid);text-align:right;padding:9px 14px;border-top:1px solid var(--gray-lt)}
-.t-banner{background:linear-gradient(135deg,var(--navy-dark),var(--navy-mid));color:#fff;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.t-name{font-family:'Playfair Display',serif;font-size:21px;font-weight:700}
-.t-meta{font-size:13px;color:var(--blue-lt);margin-top:3px}
-.t-rnd{background:rgba(255,255,255,.13);border-radius:6px;padding:8px 16px;text-align:center}
-.t-rnd-l{font-size:10px;letter-spacing:2px;color:var(--blue-lt);text-transform:uppercase}
-.t-rnd-v{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
-.ss-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px}
-.ss-card{background:#fff;border-radius:8px;padding:14px 16px;box-shadow:0 1px 4px rgba(12,68,124,.08);border-top:3px solid var(--gray-lt)}
-.ss-card.r1{border-top-color:var(--gold)}.ss-card.r2{border-top-color:var(--gray-mid)}.ss-card.r3{border-top-color:#cd7f32}
-.ss-rnk{font-size:10px;color:var(--gray-mid);font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.ss-nm{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ss-pts{font-family:'DM Mono',monospace;font-size:20px;color:var(--navy)}
-.ss-lbl{font-size:10px;color:var(--gray-mid);letter-spacing:1px;text-transform:uppercase}
-.pay-grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
-.pay-box{background:#fff;border-radius:10px;padding:24px;box-shadow:0 1px 4px rgba(12,68,124,.07),0 4px 20px rgba(12,68,124,.05)}
-.pay-box h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);margin-bottom:20px}
-.s-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--gray-lt)}
-.s-row:last-child{border-bottom:none}
-.s-rnk{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--gray-lt);width:36px;text-align:center;flex-shrink:0}
-.s-rnk.r1{color:var(--gold)}.s-rnk.r2{color:var(--gray-mid)}.s-rnk.r3{color:#cd7f32}
-.s-info{flex:1}.s-own{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--navy)}
-.s-sub{font-family:'DM Mono',monospace;font-size:13px;color:var(--gray-dk);margin-top:1px}
-.s-pay{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--green-dk);margin-left:auto}
-.pay-bar{height:6px;background:var(--gray-lt);border-radius:3px;margin-top:6px;overflow:hidden}
-.pay-bar-f{height:100%;background:linear-gradient(90deg,var(--navy),var(--navy-mid));border-radius:3px;transition:width .6s ease}
-.bon-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:6px;margin-bottom:8px;background:var(--off-white)}
-.bon-row.won{background:#fff8ee;border:1px solid var(--gold)}
-.bon-ev{font-weight:600;font-size:14px}.bon-ow{font-size:12px;color:var(--gray-dk);margin-top:2px}
-.bon-pend{font-size:12px;color:var(--gray-mid);font-style:italic}
-.bon-amt{font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:var(--gold)}
-.bon-amt.tc{font-size:18px;color:var(--navy)}
-.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
-.team-card{border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(12,68,124,.1),0 4px 16px rgba(12,68,124,.06)}
-.team-hdr{background:linear-gradient(135deg,var(--navy-dark),var(--navy-mid));padding:16px 20px;display:flex;align-items:center;gap:14px}
-.team-av{width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--navy-dark);flex-shrink:0}
-.team-own{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff}
-.team-bdy{background:#fff}
-.team-pl{display:flex;align-items:center;padding:9px 20px;border-bottom:1px solid var(--gray-lt);gap:10px}
-.team-pl:last-child{border-bottom:none}
-.pl-num{width:20px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--gray-mid);flex-shrink:0}
-.pl-nm{font-weight:600;font-size:14px;flex:1}
-.maj-row{background:#fffaf0!important}.maj-row td:first-child{border-left:4px solid var(--gold);padding-left:10px}
-.tc-row{background:#f0f6ff!important}
-.maj-tag{display:inline-block;background:var(--gold);color:#5a3a00;font-size:9px;font-weight:800;letter-spacing:1.5px;padding:2px 6px;border-radius:3px;text-transform:uppercase;margin-left:6px;vertical-align:middle}
-.tc-tag{display:inline-block;background:var(--navy);color:#fff;font-size:9px;font-weight:800;letter-spacing:1.5px;padding:2px 6px;border-radius:3px;text-transform:uppercase;margin-left:6px;vertical-align:middle}
-.champ{display:inline-flex;align-items:center;gap:5px;color:var(--green-dk);font-weight:600;font-size:13px}
-.champ::before{content:'🏆';font-size:12px}
-.rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-.rule-card{background:#fff;border-radius:10px;padding:24px;box-shadow:0 1px 4px rgba(12,68,124,.08),0 4px 16px rgba(12,68,124,.05);border-top:4px solid var(--navy)}
-.rule-card.wide{border-top-color:var(--gold);grid-column:span 2}
-@media(max-width:700px){.rule-card.wide{grid-column:span 1}}
-.rule-icon{font-size:26px;margin-bottom:10px}
-.rule-card h3{font-family:'Playfair Display',serif;font-size:19px;color:var(--navy);margin-bottom:14px}
-.rl{list-style:none;display:flex;flex-direction:column;gap:9px}
-.rl li{font-size:14px;padding-left:18px;position:relative;line-height:1.5}
-.rl li::before{content:'–';position:absolute;left:0;color:var(--gold);font-weight:700}
-.rl .sm{font-size:12px;color:var(--gray-dk)}
-.rl .eg{background:var(--off-white);border-radius:5px;padding:6px 10px 6px 28px!important;font-family:'DM Mono',monospace;font-size:13px!important}
-.bt{display:flex;flex-direction:column;gap:6px}
-.br{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--off-white);border-radius:6px;font-size:14px}
-.br.tc{background:#fff8ee;border:1px solid var(--gold)}
-.be{font-weight:600}.ba{font-family:'DM Mono',monospace;font-weight:700;color:var(--green-dk);font-size:15px}
-.br.tc .ba{color:var(--gold);font-size:17px}
-.cs{text-align:center;padding:80px 20px}
-.cs-icon{font-size:60px;margin-bottom:18px}
-.cs h2{font-family:'Playfair Display',serif;font-size:34px;color:var(--navy);margin-bottom:10px}
-.cs p{color:var(--gray-dk);font-size:15px}
-@media(max-width:900px){.pay-grid{grid-template-columns:1fr}.ss-strip{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.ss-strip{grid-template-columns:repeat(2,1fr)}.teams-grid{grid-template-columns:1fr}nav button{padding:16px 8px;font-size:10px}.logo-sub{display:none}}
+:root {
+  --navy:     #0C447C;
+  --navy-dark:#082f57;
+  --navy-mid: #1a5a9e;
+  --blue-lt:  #B5D4F4;
+  --gold:     #EF9F27;
+  --gold-lt:  #f7c96e;
+  --green:    #1D9E75;
+  --green-dk: #0F6E56;
+  --white:    #FFFFFF;
+  --off-white:#F4F7FB;
+  --gray-lt:  #E8EEF6;
+  --gray-mid: #9EB4CC;
+  --gray-dk:  #4a6280;
+  --text:     #0d1f33;
+  --red:      #d94444;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--off-white);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--navy);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(8,47,87,0.4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.logo-text .wordmark {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.5px;
+}
+.logo-text .sub {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--blue-lt);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ── NAV ── */
+nav { display: flex; gap: 4px; }
+nav button {
+  background: none;
+  border: none;
+  color: var(--blue-lt);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 20px 18px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+nav button:hover { color: var(--white); }
+nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── TABS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── COMMON ── */
+.section-header {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: var(--white);
+  font-weight: 700;
+}
+.badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.badge.live { background: var(--red); color: #fff; animation: pulse 2s infinite; }
+.badge.final { background: var(--gray-dk); color: #fff; }
+.badge.upcoming { background: var(--green); color: #fff; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(12,68,124,.08);
+  margin: 20px 24px;
+  overflow: hidden;
+}
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  color: var(--gray-dk);
+  font-size: 14px;
+}
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--gray-lt);
+  border-top-color: var(--navy);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── STANDINGS STRIP ── */
+.standings-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  padding: 16px 24px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-lt);
+}
+.ss-card {
+  background: var(--off-white);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.ss-card.rank-1 { background: linear-gradient(135deg,#fff8ee,#fff3d6); border: 1px solid var(--gold-lt); }
+.ss-rank { font-size: 10px; font-weight: 700; color: var(--gray-dk); letter-spacing: 1px; margin-bottom: 2px; }
+.ss-owner { font-size: 12px; font-weight: 700; color: var(--navy); }
+.ss-pts { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--green-dk); }
+
+/* ── TOURNAMENT BANNER ── */
+.tournament-banner {
+  background: linear-gradient(90deg, var(--navy) 0%, var(--navy-mid) 100%);
+  padding: 14px 20px;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.t-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+.t-meta { font-size: 12px; color: var(--blue-lt); }
+
+/* ── LEADERBOARD TABLE ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--gray-lt); }
+thead th {
+  padding: 10px 14px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gray-dk);
+  text-align: left;
+  white-space: nowrap;
+}
+thead th.c { text-align: center; }
+tbody tr { border-bottom: 1px solid var(--gray-lt); transition: background .15s; }
+tbody tr:hover { background: var(--off-white); }
+tbody tr.pool-player { background: rgba(29,158,117,.06); }
+tbody tr.pool-player:hover { background: rgba(29,158,117,.12); }
+tbody td {
+  padding: 10px 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+tbody td.c { text-align: center; }
+.pos-cell { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--gray-dk); font-size: 12px; }
+.player-name { font-weight: 600; color: var(--text); }
+.player-name.pool { color: var(--navy); }
+.team-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: var(--white);
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.score-cell { font-family: 'DM Mono', monospace; font-size: 13px; }
+.score-cell.under { color: var(--red); font-weight: 700; }
+.score-cell.over  { color: var(--navy); }
+.score-cell.even  { color: var(--gray-dk); }
+.cut-row td { opacity: .5; }
+.last-upd { padding: 10px 16px; font-size: 11px; color: var(--gray-mid); border-top: 1px solid var(--gray-lt); }
+
+/* ── TEAMS TAB ── */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 20px 24px;
+}
+.team-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(12,68,124,.08);
+  overflow: hidden;
+}
+.team-header {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  padding: 14px 18px;
+}
+.team-owner { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--white); font-weight: 700; }
+.team-earnings { font-size: 12px; color: var(--blue-lt); margin-top: 2px; }
+.team-players { list-style: none; }
+.team-players li {
+  padding: 9px 18px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--gray-lt);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.team-players li:last-child { border-bottom: none; }
+.player-earn { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green-dk); font-weight: 500; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){ .teams-grid { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:700px){
+  .teams-grid { grid-template-columns: 1fr; }
+  .standings-strip { grid-template-columns: repeat(3,1fr); }
+  nav button { padding: 16px 10px; font-size: 10px; }
+  .logo-text .sub { display: none; }
+}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo" onclick="showTab('dashboard')">
-    <svg width="36" height="36" viewBox="0 0 36 36" style="flex-shrink:0">
+  <div class="logo-wrap" onclick="showTab('live')">
+    <svg width="36" height="36" viewBox="0 0 36 36">
       <line x1="18" y1="6" x2="18" y2="28" stroke="#B5D4F4" stroke-width="2" stroke-linecap="round"/>
       <polygon points="18,6 28,11 18,16" fill="#EF9F27"/>
       <ellipse cx="18" cy="29" rx="8" ry="3" fill="#0F6E56"/>
       <ellipse cx="18" cy="28" rx="8" ry="3" fill="#1D9E75"/>
     </svg>
-    <div><div class="wordmark">TFGL</div><div class="logo-sub">The Fantasy Golf League</div></div>
+    <div class="logo-text">
+      <div class="wordmark">TFGL</div>
+      <div class="sub">The Fantasy Golf League</div>
+    </div>
   </div>
   <nav>
-    <button onclick="showTab('dashboard')" id="nav-dashboard" class="active">Dashboard</button>
-    <button onclick="showTab('live')"      id="nav-live">Live Scoring</button>
-    <button onclick="showTab('teams')"     id="nav-teams">Teams</button>
-    <button onclick="showTab('schedule')"  id="nav-schedule">Schedule</button>
-    <button onclick="showTab('payouts')"   id="nav-payouts">Payouts</button>
-    <button onclick="showTab('rules')"     id="nav-rules">Rules</button>
+    <button onclick="showTab('live')"  id="nav-live"  class="active">Live Scoring</button>
+    <button onclick="showTab('teams')" id="nav-teams">Teams</button>
   </nav>
 </header>
+
 <main>
 
-<div id="tab-dashboard" class="tab active">
-  <div class="cs"><div class="cs-icon">⛳</div><h2>Dashboard</h2><p>Season overview coming soon.</p></div>
-</div>
-
-<div id="tab-live" class="tab">
-  <div class="sec-hdr"><h1>Live Scoring</h1><span class="badge live" id="live-badge">LIVE</span></div>
-  <div id="ss-strip" class="ss-strip"></div>
+<!-- ── LIVE SCORING ── -->
+<div id="tab-live" class="tab-panel active">
+  <div class="section-header">
+    <h1>Live Scoring</h1>
+    <span class="badge live" id="live-badge">LIVE</span>
+  </div>
+  <div id="standings-strip" class="standings-strip"></div>
   <div class="card">
-    <div id="live-load" class="loader"><div class="spin"></div><p>Loading tournament data…</p></div>
-    <div id="live-body" style="display:none">
-      <div class="t-banner" id="t-banner"></div>
-      <div class="tbl"><table>
-        <thead><tr><th class="c">POS</th><th>PLAYER</th><th>TEAM</th><th class="c">TOT</th><th class="c">R1</th><th class="c">R2</th><th class="c">R3</th><th class="c">R4</th><th class="c">THRU</th></tr></thead>
-        <tbody id="live-rows"></tbody>
-      </table></div>
-      <div class="upd" id="live-upd"></div>
-    </div>
-    <div id="live-err" class="loader" style="display:none"><p>⚠️ Could not load live data.</p></div>
-  </div>
-</div>
-
-<div id="tab-teams" class="tab">
-  <div class="sec-hdr"><h1>Teams</h1></div>
-  <div class="teams-grid" id="teams-grid"><div class="loader"><div class="spin"></div><p>Loading rosters…</p></div></div>
-</div>
-
-<div id="tab-schedule" class="tab">
-  <div class="sec-hdr">
-    <h1>PGA Tour Schedule</h1>
-    <span style="font-size:13px;color:var(--gray-dk)"><span style="display:inline-block;width:12px;height:12px;background:var(--gold);border-radius:2px;vertical-align:middle;margin-right:4px"></span>Majors</span>
-  </div>
-  <div class="card">
-    <div class="tbl"><table>
-      <thead><tr><th class="c">#</th><th>TOURNAMENT</th><th>DATES</th><th>COURSE</th><th class="c">PURSE</th><th>CHAMPION</th></tr></thead>
-      <tbody id="sched-rows"></tbody>
-    </table></div>
-    <div class="upd" id="sched-upd"></div>
-  </div>
-</div>
-
-<div id="tab-payouts" class="tab">
-  <div class="sec-hdr"><h1>Season Standings &amp; Payouts</h1></div>
-  <div id="pay-load" class="loader"><div class="spin"></div><p>Calculating standings…</p></div>
-  <div id="pay-body" style="display:none">
-    <div class="pay-grid">
-      <div class="pay-box">
-        <h2>🏆 Season Standings</h2>
-        <div id="standings"></div>
-        <div class="upd" id="pay-upd" style="border:none;padding:10px 0 0;margin-top:10px"></div>
+    <div id="live-loading" class="loader"><div class="spinner"></div><p>Loading tournament data…</p></div>
+    <div id="live-content" style="display:none">
+      <div class="tournament-banner" id="tournament-banner"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th class="c">POS</th><th>PLAYER</th><th>TEAM</th>
+            <th class="c">TOT</th><th class="c">R1</th><th class="c">R2</th><th class="c">R3</th><th class="c">R4</th><th class="c">THRU</th>
+          </tr></thead>
+          <tbody id="scoring-tbody"></tbody>
+        </table>
       </div>
-      <div class="pay-box">
-        <h2>⚡ Major Bonuses</h2>
-        <div id="bonuses"></div>
-        <p style="font-size:12px;color:var(--gray-dk);margin-top:14px;padding-top:12px;border-top:1px solid var(--gray-lt)">Total bonus pool: <strong>$300</strong> · Season pot: <strong>$1,200</strong></p>
-      </div>
+      <div class="last-upd" id="last-upd"></div>
     </div>
+    <div id="live-error" class="loader" style="display:none"><p>⚠️ Could not load live data. Check back shortly.</p></div>
   </div>
-  <div id="pay-err" class="loader" style="display:none"><p>⚠️ Could not load payout data.</p></div>
 </div>
 
-<div id="tab-rules" class="tab">
-  <div class="sec-hdr"><h1>League Rules</h1></div>
-  <div class="rules-grid">
-    <div class="rule-card"><div class="rule-icon">📅</div><h3>Schedule</h3>
-      <ul class="rl"><li>PGA Tour events only — no LIV</li><li>Season ends at the Tour Championship</li><li>During major weeks, satellite events are <strong>not</strong> counted</li><li>WGC events not included</li></ul>
-    </div>
-    <div class="rule-card"><div class="rule-icon">👥</div><h3>Roster</h3>
-      <ul class="rl"><li>Teams of <strong>10 players</strong></li><li>Players stay on your team for the full calendar year</li><li>No trades, drops, or mid-season roster changes</li><li>Mid-season joiners only earn points going forward</li></ul>
-    </div>
-    <div class="rule-card"><div class="rule-icon">📊</div><h3>Points</h3>
-      <ul class="rl"><li><strong>1 point per $100,000</strong> in tournament winnings</li><li>Winnings rounded to nearest $10,000 <span class="sm">($5k+ rounds up)</span></li><li class="eg">$4,150,000 → <strong>41.5 pts</strong></li><li class="eg">$1,234,999 → <strong>12 pts</strong></li></ul>
-    </div>
-    <div class="rule-card"><div class="rule-icon">💰</div><h3>Payouts</h3>
-      <ul class="rl"><li>Buy-in: <strong>$250/person</strong> · Total pot: <strong>$1,500</strong></li><li>Your % of total league points = your % of the <strong>$1,200</strong> season pot</li><li>Payouts completed at end of season</li></ul>
-    </div>
-    <div class="rule-card wide"><div class="rule-icon">🏆</div>
-      <h3>Major Bonuses </h3>
-      
-      <div class="bt">
-        <div class="br"><span class="be">Masters Tournament</span><span class="ba">$50</span></div>
-        <div class="br"><span class="be">PGA Championship</span><span class="ba">$50</span></div>
-        <div class="br"><span class="be">U.S. Open</span><span class="ba">$50</span></div>
-        <div class="br"><span class="be">The Open Championship</span><span class="ba">$50</span></div>
-        <div class="br tc"><span class="be">Tour Championship</span><span class="ba tc">$100</span></div>
-      </div>
-    </div>
-  </div>
+<!-- ── TEAMS ── -->
+<div id="tab-teams" class="tab-panel">
+  <div class="section-header"><h1>Team Rosters</h1></div>
+  <div id="teams-loading" class="card"><div class="loader"><div class="spinner"></div><p>Loading rosters…</p></div></div>
+  <div id="teams-grid" class="teams-grid" style="display:none"></div>
+  <div id="teams-error" class="card" style="display:none"><div class="loader"><p>⚠️ Could not load roster data.</p></div></div>
 </div>
 
 </main>
+
 <script>
-const WORKER     = 'https://tfgl2026.ag148414.workers.dev';
-const JSONBIN_ID = '69dc46c9856a68218928fe66';
-const JSONBIN_KEY= '$2a$10$ThYZbqfZHSHJybW7JdaBpOWXtrVXjhCkl/HDD.SZBaMeDc1R4LM62';
-const SEASON_POT = 1200;
+const WORKER   = 'https://tfgl2026.ag148414.workers.dev';
+const JSONBIN  = 'https://api.jsonbin.io/v3/b/69dc46c9856a68218928fe66';
+const JSONBIN_KEY = '$2a$10$O5Eqd7eiCEPjb5y5HNK8meG3PGVoHxz.tIbCHO7vKRqrMaQjXFJJC';
 
-const SCHEDULE = [
-  {num:1, dates:'Apr 2-5',      name:'Valero Texas Open',             espn:'Valero Texas Open',              course:'TPC San Antonio, San Antonio, TX',           purse:'$9.8M',  major:false, espnId:'401811940'},
-  {num:2, dates:'Apr 9-12',     name:'Masters Tournament',            espn:'Masters Tournament',             course:'Augusta National Golf Club, Augusta, GA',    purse:'$22.5M', major:true,  espnId:'401811941'},
-  {num:3, dates:'Apr 16-19',    name:'RBC Heritage',                  espn:'RBC Heritage',                   course:'Harbour Town Golf Links, Hilton Head, SC',   purse:'$20M',   major:false, espnId:'401811942'},
-  {num:4, dates:'Apr 23-26',    name:'Zurich Classic of New Orleans', espn:'Zurich Classic of New Orleans',  course:'TPC Louisiana, Avondale, LA',                purse:'$9.2M',  major:false, espnId:'401811943'},
-  {num:5, dates:'Apr 30-May 3', name:'Cadillac Championship',         espn:'Cadillac Championship',          course:'Trump National Doral, Miami, FL',            purse:'$20M',   major:false, espnId:'401811944'},
-  {num:6, dates:'May 7-10',     name:'Truist Championship',           espn:'Truist Championship',            course:'Quail Hollow Club, Charlotte, NC',           purse:'$20M',   major:false, espnId:'401811945'},
-  {num:7, dates:'May 7-10',     name:'Myrtle Beach Classic',          espn:'ONEflight Myrtle Beach Classic', course:'Dunes Golf & Beach Club, Myrtle Beach, SC',  purse:'$4M',    major:false, espnId:'401811946'},
-  {num:8, dates:'May 14-17',    name:'PGA Championship',              espn:'PGA Championship',               course:'Aronimink Golf Club, Newtown Square, PA',    purse:'$19M',   major:true,  espnId:'401811947'},
-  {num:9, dates:'May 21-24',    name:'CJ Cup Byron Nelson',           espn:'THE CJ CUP Byron Nelson',        course:'TPC Craig Ranch, McKinney, TX',              purse:'$9.9M',  major:false, espnId:'401811948'},
-  {num:10,dates:'May 28-31',    name:'Charles Schwab Challenge',      espn:'Charles Schwab Challenge',       course:'Colonial Country Club, Fort Worth, TX',      purse:'$9.5M',  major:false, espnId:'401811949'},
-  {num:11,dates:'Jun 4-7',      name:'The Memorial Tournament',       espn:'Memorial Tournament',            course:'Muirfield Village Golf Club, Dublin, OH',    purse:'$20M',   major:false, espnId:'401811950'},
-  {num:12,dates:'Jun 11-14',    name:'RBC Canadian Open',             espn:'RBC Canadian Open',              course:'TBD',                                        purse:'$9.8M',  major:false, espnId:'401811951'},
-  {num:13,dates:'Jun 18-21',    name:'U.S. Open',                     espn:'U.S. Open',                      course:'Shinnecock Hills, Southampton, NY',          purse:'$21.5M', major:true,  espnId:'401811952'},
-  {num:14,dates:'Jun 25-28',    name:'Travelers Championship',        espn:'Travelers Championship',         course:'TPC River Highlands, Cromwell, CT',          purse:'$20M',   major:false, espnId:'401811953'},
-  {num:15,dates:'Jun 26-29',    name:'Rocket Classic',                espn:'Rocket Classic',                 course:'Detroit Golf Club, Detroit, MI',             purse:'$9.6M',  major:false, espnId:'401811954'},
-  {num:16,dates:'Jul 2-5',      name:'John Deere Classic',            espn:'John Deere Classic',             course:'TPC Deere Run, Silvis, IL',                  purse:'$8.4M',  major:false, espnId:'401811955'},
-  {num:17,dates:'Jul 9-12',     name:'Genesis Scottish Open',         espn:'Genesis Scottish Open',          course:'Renaissance Club, North Berwick, Scotland',  purse:'$9M',    major:false, espnId:'401811956'},
-  {num:18,dates:'Jul 9-12',     name:'ISCO Championship',             espn:'ISCO Championship',              course:'Keene Trace Golf Club, Nicholasville, KY',   purse:'$4M',    major:false, espnId:'401811957'},
-  {num:19,dates:'Jul 13-19',    name:'The Open Championship',         espn:'The Open Championship',          course:'Royal Birkdale, Southport, England',         purse:'$17M',   major:true,  espnId:'401811958'},
-  {num:20,dates:'Jul 16-19',    name:'Corales Puntacana Championship',espn:'Corales Puntacana Championship', course:'Corales Golf Course, Punta Cana, DR',        purse:'$4M',    major:false, espnId:'401811959'},
-  {num:21,dates:'Jul 23-26',    name:'3M Open',                       espn:'3M Open',                        course:'TPC Twin Cities, Blaine, MN',                purse:'$8.4M',  major:false, espnId:'401811960'},
-  {num:22,dates:'Aug 6-9',      name:'Wyndham Championship',          espn:'Wyndham Championship',           course:'Sedgefield Country Club, Greensboro, NC',    purse:'$8.2M',  major:false, espnId:'401811961'},
-  {num:23,dates:'Aug 13-16',    name:'FedEx St. Jude Championship',   espn:'FedEx St. Jude Championship',    course:'TPC Southwind, Memphis, TN',                 purse:'$20M',   major:false, espnId:'401811962'},
-  {num:24,dates:'Aug 20-23',    name:'BMW Championship',              espn:'BMW Championship',               course:'Caves Valley Golf Club, Owings Mills, MD',   purse:'$20M',   major:false, espnId:'401811963'},
-  {num:25,dates:'Aug 27-30',    name:'Tour Championship',             espn:'Tour Championship',              course:'East Lake Golf Club, Atlanta, GA',            purse:'$40M',   major:false, tourChamp:true, espnId:'401811964'},
-];
-
-const MAJORS = ['Masters Tournament','PGA Championship','U.S. Open','The Open Championship'];
-let TEAMS=[], ALL_PLAYERS=[], _earnings=null, _liveTimer=null, _liveCache=null;
-const norm = s=>(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-const show = id=>document.getElementById(id).style.display='';
-const hide = id=>document.getElementById(id).style.display='none';
-function getOwner(n){for(const t of TEAMS)if(t.players.some(p=>norm(p)===norm(n)))return t.owner;return null}
-function fmtScore(v){if(!v||v==='–')return'–';if(/^e$/i.test(v)||v==='0')return'E';const n=parseInt(v);if(isNaN(n))return v;return n<0?String(n):'+'+n}
-function scClass(v){if(/cut/i.test(v))return'cut';if(/wd|dq/i.test(v))return'wd';const n=parseInt(v);if(isNaN(n))return'';return n<0?'un':n>0?'ov':'ev'}
-function posClass(p){const n=parseInt(p);return n<=5?'t5':n<=10?'t10':''}
-function toPoints(d){if(!d||d<=0)return 0;return Math.round(d/10000)*10000/100000}
-
-// Global prefetch cache
-let _binData = null;
-
-async function init(){
-  try{
-    const r=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}});
-    const d=await r.json();
-    _binData = d;
-    TEAMS=d.record.teams;
-    ALL_PLAYERS=TEAMS.flatMap(t=>t.players);
-  }catch(e){console.error('JSONbin load failed:',e)}
-  renderTeams({});
-  renderScheduleTable({});
-  // Prefetch earnings + schedule in background so tabs load instantly
-  prefetchAll();
+/* ─── tab switching ──────────────────────────── */
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
 }
 
-async function prefetchAll(){
-  // Prefetch earnings
-  try{
-    const earnMap={};
-    const storedTournaments=_binData?.record?.tournaments||[];
-    storedTournaments.forEach(t=>{
-      if(!t.completed) return;
-      Object.entries(t.earnings||{}).forEach(([player,amt])=>{
-        earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
-        earnMap[player]=(earnMap[player]||0)+amt;
-      });
-    });
-    // Prefetch schedule from worker
-    const schedData=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
-    const winners={};
-    (schedData.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
-    _earnings={earnMap,winners};
-    // Render teams with earnings now that we have them
-    renderTeams(earnMap);
-    // Render schedule with winners
-    renderScheduleTable(winners);
-    _schedLoaded=true;
-  }catch(e){console.warn('Prefetch failed:',e)}
+/* ─── data cache ─────────────────────────────── */
+let rosters    = null;  // [{owner, players:[]}]
+let earningsMap = {};   // playerName → earnings (number)
+
+/* ─── score formatting ───────────────────────── */
+function fmtScore(val) {
+  if (!val || val === '–' || val === 'E') return { txt: val || 'E', cls: 'even' };
+  const n = parseInt(val, 10);
+  if (isNaN(n)) return { txt: val, cls: 'even' };
+  if (n < 0)  return { txt: String(n), cls: 'under' };
+  if (n === 0) return { txt: 'E', cls: 'even' };
+  return { txt: '+' + n, cls: 'over' };
 }
 
-function showTab(tab){
-  document.querySelectorAll('.tab').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  document.getElementById('nav-'+tab).classList.add('active');
-  if(tab==='live')initLive();
-  if(tab==='schedule')initSchedule();
-  if(tab==='payouts')initPayouts();
-}
-
-// LIVE
-function getCurrentTournamentId(){
-  const today=new Date();
-  const mo={Apr:3,May:4,Jun:5,Jul:6,Aug:7};
-  let best=SCHEDULE[0];
-  for(const s of SCHEDULE){
-    const m=s.dates.match(/([A-Za-z]+)\s+(\d+)/);if(!m)continue;
-    const mon=mo[m[1]];if(mon===undefined)continue;
-    const start=new Date(2026,mon,parseInt(m[2]));
-    const end=new Date(2026,mon,parseInt(m[2])+5);
-    if(today>=start&&today<=end)return s.espnId;
-    if(end<=today)best=s;
-  }
-  return best.espnId;
-}
-
-async function initLive(){if(_liveTimer)clearInterval(_liveTimer);await loadLive();_liveTimer=setInterval(loadLive,60000)}
-
-async function loadLive(){
-  const tid=getCurrentTournamentId();
-  if(!_liveCache){show('live-load');hide('live-body');hide('live-err')}
-  try{
-    const data=await fetch(`${WORKER}?type=leaderboard&id=${tid}`).then(r=>r.json());
-    if(!data.players||!data.players.length)throw new Error('no players');
-    _liveCache=data;
-    hide('live-load');hide('live-err');show('live-body');
-    const badge=document.getElementById('live-badge');
-    const isLive=/progress|live/i.test(data.status||'');
-    const isFinal=/final|complete/i.test(data.status||'');
-    badge.textContent=isLive?'LIVE':isFinal?'FINAL':(data.status||'UPCOMING');
-    badge.className='badge'+(isLive?' live':isFinal?' final':'');
-    const sched=SCHEDULE.find(s=>s.espnId===tid)||{};
-    document.getElementById('t-banner').innerHTML=`
-      <div><div class="t-name">${data.tournamentName||sched.name||'Current Tournament'}</div>
-      <div class="t-meta">${sched.course||''}</div></div>
-      <div class="t-rnd"><div class="t-rnd-l">Status</div>
-      <div class="t-rnd-v">${isFinal?'Final':(data.status||'–')}</div></div>`;
-    const pool=data.players.filter(p=>ALL_PLAYERS.some(ap=>norm(ap)===norm(p.name)));
-    pool.sort((a,b)=>{
-      if(a.isCut&&!b.isCut)return 1;if(!a.isCut&&b.isCut)return -1;
-      const pa=parseInt(a.pos)||999,pb=parseInt(b.pos)||999;
-      return pa!==pb?pa-pb:(parseInt(a.toPar)||0)-(parseInt(b.toPar)||0);
-    });
-    document.getElementById('live-rows').innerHTML=pool.length===0
-      ?'<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--gray-dk)">No pool players in this field yet.</td></tr>'
-      :pool.map(p=>{
-        const ow=getOwner(p.name),sc=scClass(p.isCut?'CUT':p.isWD?'WD':p.toPar);
-        return`<tr>
-          <td class="c"><span class="chip ${posClass(p.pos)}">${p.pos}</span></td>
-          <td><strong>${p.name}</strong></td>
-          <td style="font-size:13px;color:var(--gray-dk)">${ow||'—'}</td>
-          <td class="c"><span class="sc ${sc}">${fmtScore(p.isCut?'CUT':p.isWD?'WD':p.toPar)}</span></td>
-          <td class="c mono" style="font-size:13px">${p.r1||'–'}</td>
-          <td class="c mono" style="font-size:13px">${p.r2||'–'}</td>
-          <td class="c mono" style="font-size:13px">${p.r3||'–'}</td>
-          <td class="c mono" style="font-size:13px">${p.r4||'–'}</td>
-          <td class="c mono" style="font-size:12px;color:var(--gray-dk)">${p.thru||'–'}</td>
-        </tr>`;
-      }).join('');
-    const ss=TEAMS.map(t=>{let tot=0;t.players.forEach(n=>{const p=data.players.find(ap=>norm(ap.name)===norm(n));if(p&&!p.isCut&&!p.isWD){const raw=p.toPar;const v=/^e$/i.test(raw)?0:parseInt(raw);if(!isNaN(v))tot+=v;}});return{owner:t.owner,tot};}).sort((a,b)=>a.tot-b.tot);
-    document.getElementById('ss-strip').innerHTML=ss.map((s,i)=>{
-      const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
-      const rl=i===0?'🥇 1st':i===1?'🥈 2nd':i===2?'🥉 3rd':`${i+1}th`;
-      const dp=s.tot===0?'E':s.tot>0?'+'+s.tot:s.tot;
-      return`<div class="ss-card ${rc}"><div class="ss-rnk">${rl}</div><div class="ss-nm">${s.owner.split(' ')[0]}</div><div class="ss-pts">${dp}</div><div class="ss-lbl">This Week</div></div>`;
-    }).join('');
-    document.getElementById('live-upd').textContent='Last updated: '+new Date().toLocaleTimeString();
-  }catch(e){console.error(e);if(!_liveCache){hide('live-load');show('live-err')}}
-}
-
-// TEAMS
-function renderTeams(earnMap){
-  const grid=document.getElementById('teams-grid');
-  if(!TEAMS.length){grid.innerHTML='<div class="loader"><p>Loading rosters…</p></div>';return}
-  const em=earnMap||{};
-  grid.innerHTML=TEAMS.map(t=>{
-    const init=t.owner.split(' ').map(w=>w[0]).join('');
-    let teamTotal=0;
-    const rows=t.players.map((p,i)=>{
-      const earn=em[norm(p)]||em[p]||0;
-      teamTotal+=earn;
-      const pts=toPoints(earn);
-      const earnStr=earn>0?'$'+earn.toLocaleString('en-US'):'—';
-      const ptsStr=pts>0?pts.toFixed(1)+' pts':'';
-      return`<div class="team-pl">
-        <span class="pl-num">${i+1}</span>
-        <span class="pl-nm">${p}</span>
-        <span style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
-          <span style="font-family:'DM Mono',monospace;font-size:12px;color:${earn>0?'var(--green-dk)':'var(--gray-mid)'}">${earnStr}</span>
-          ${ptsStr?`<span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--gray-mid)">${ptsStr}</span>`:''}
-        </span>
-      </div>`;
-    }).join('');
-    const totalStr=teamTotal>0?'$'+teamTotal.toLocaleString('en-US'):'$0';
-    return`<div class="team-card">
-      <div class="team-hdr">
-        <div class="team-av">${init}</div>
-        <div class="team-own">${t.owner}</div>
-        <div style="margin-left:auto;text-align:right">
-          <div style="font-size:10px;color:var(--blue-lt);letter-spacing:1px;text-transform:uppercase">Season Earnings</div>
-          <div style="font-family:'DM Mono',monospace;font-size:16px;color:var(--gold);font-weight:500">${totalStr}</div>
-        </div>
-      </div>
-      <div class="team-bdy">${rows}</div>
-    </div>`;
-  }).join('');
-}
-
-async function initTeams(){
-  // If prefetch already ran, render immediately — no wait
-  if(_earnings){renderTeams(_earnings.earnMap);return;}
-  // Otherwise show empty then load
-  renderTeams({});
-  try{
-    const binData=_binData || await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json());
-    const earnMap={};
-    const storedTournaments=binData?.record?.tournaments||[];
-    storedTournaments.forEach(t=>{
-      if(!t.completed) return;
-      Object.entries(t.earnings||{}).forEach(([player,amt])=>{
-        earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
-        earnMap[player]=(earnMap[player]||0)+amt;
-      });
-    });
-    renderTeams(earnMap);
-    if(!_earnings){
-      const schedData=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
-      const winners={};
-      (schedData.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
-      _earnings={earnMap,winners};
+/* ─── find which team owns a player ──────────── */
+function ownerOf(playerName) {
+  if (!rosters || !playerName) return null;
+  const norm = n => n.toLowerCase().replace(/[^a-z]/g,'');
+  const pn = norm(playerName);
+  for (const t of rosters) {
+    for (const p of t.players) {
+      if (norm(p) === pn) return t.owner.split(' ')[0]; // first name only
     }
-  }catch(e){console.error('Teams earnings fetch failed:',e);}
+  }
+  return null;
 }
 
-// SCHEDULE
-let _schedLoaded=false;
-async function initSchedule(){
-  // If prefetch already got winners, render instantly
-  if(_earnings?.winners){
-    renderScheduleTable(_earnings.winners);
-    document.getElementById('sched-upd').textContent='Champions auto-updated from ESPN · '+new Date().toLocaleTimeString();
+/* ─── STANDINGS STRIP ────────────────────────── */
+function buildStandings() {
+  const strip = document.getElementById('standings-strip');
+  if (!rosters) { strip.innerHTML = ''; return; }
+  const totals = rosters.map(t => {
+    const pts = t.players.reduce((sum, p) => {
+      const earn = earningsMap[p] || 0;
+      return sum + earn / 100000;
+    }, 0);
+    return { owner: t.owner, pts };
+  }).sort((a,b) => b.pts - a.pts);
+
+  strip.innerHTML = totals.map((t, i) => `
+    <div class="ss-card${i===0?' rank-1':''}">
+      <div class="ss-rank">#${i+1}</div>
+      <div class="ss-owner">${t.owner.split(' ')[0]}</div>
+      <div class="ss-pts">${t.pts.toFixed(1)} pts</div>
+    </div>`).join('');
+}
+
+/* ─── LOAD ROSTERS ───────────────────────────── */
+async function loadRosters() {
+  try {
+    const res = await fetch(JSONBIN, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+    const json = await res.json();
+    rosters = json.record.teams;
+  } catch(e) {
+    console.warn('Roster load failed', e);
+    rosters = [];
+  }
+}
+
+/* ─── LOAD EARNINGS ──────────────────────────── */
+async function loadEarnings() {
+  try {
+    const res = await fetch(`${WORKER}?type=earnings`);
+    const json = await res.json();
+    earningsMap = {};
+    (json.players || []).forEach(p => {
+      if (p.name && p.earnings != null) earningsMap[p.name] = p.earnings;
+    });
+  } catch(e) {
+    console.warn('Earnings load failed', e);
+  }
+}
+
+/* ─── LOAD LIVE SCORING ──────────────────────── */
+async function loadLive() {
+  const loading = document.getElementById('live-loading');
+  const content = document.getElementById('live-content');
+  const errEl   = document.getElementById('live-error');
+  const badge   = document.getElementById('live-badge');
+
+  try {
+    const res  = await fetch(`${WORKER}?type=schedule`);
+    const data = await res.json();
+
+    // find current/most-recent event
+    const events = data.events || [];
+    const now = new Date();
+    let current = null;
+    for (const ev of events) {
+      const end = new Date(ev.endDate || ev.date);
+      if (end >= now || !current) current = ev;
+      if (new Date(ev.startDate || ev.date) <= now && end >= now) { current = ev; break; }
+    }
+    if (!current) throw new Error('No event found');
+
+    const lbRes  = await fetch(`${WORKER}?type=leaderboard&id=${current.id}`);
+    const lbData = await lbRes.json();
+
+    // status badge
+    const st = (lbData.status || '').toLowerCase();
+    badge.className = 'badge ' + (st.includes('in') ? 'live' : st.includes('final') || st.includes('complete') ? 'final' : 'upcoming');
+    badge.textContent = st.includes('in') ? 'LIVE' : st.includes('final') || st.includes('complete') ? 'FINAL' : 'UPCOMING';
+
+    // banner
+    document.getElementById('tournament-banner').innerHTML = `
+      <div>
+        <div class="t-name">${lbData.tournamentName || current.name}</div>
+        <div class="t-meta">${current.course || ''}</div>
+      </div>
+      <div class="t-meta" style="text-align:right">${current.date || ''}</div>`;
+
+    // rows
+    const tbody = document.getElementById('scoring-tbody');
+    tbody.innerHTML = '';
+    const players = lbData.players || [];
+    players.forEach(p => {
+      const owner = ownerOf(p.name);
+      const isCut = p.isCut || p.isWD;
+      const tot = fmtScore(p.toPar);
+      const r1  = fmtScore(p.r1);
+      const r2  = fmtScore(p.r2);
+      const r3  = fmtScore(p.r3);
+      const r4  = fmtScore(p.r4);
+      const tr = document.createElement('tr');
+      if (owner) tr.classList.add('pool-player');
+      if (isCut) tr.classList.add('cut-row');
+      tr.innerHTML = `
+        <td class="c pos-cell">${p.pos || '–'}</td>
+        <td class="player-name${owner?' pool':''}">${p.name}</td>
+        <td>${owner ? `<span class="team-pill">${owner}</span>` : ''}</td>
+        <td class="c score-cell ${tot.cls}">${tot.txt}</td>
+        <td class="c score-cell">${r1.txt}</td>
+        <td class="c score-cell">${r2.txt}</td>
+        <td class="c score-cell">${r3.txt}</td>
+        <td class="c score-cell">${r4.txt}</td>
+        <td class="c score-cell">${p.thru || '–'}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('last-upd').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    loading.style.display = 'none';
+    content.style.display = 'block';
+  } catch(e) {
+    console.error('Live load error', e);
+    loading.style.display = 'none';
+    errEl.style.display   = 'flex';
+  }
+}
+
+/* ─── TEAMS TAB ──────────────────────────────── */
+function renderTeams() {
+  const grid  = document.getElementById('teams-grid');
+  const errEl = document.getElementById('teams-error');
+  const loadEl= document.getElementById('teams-loading');
+
+  if (!rosters || !rosters.length) {
+    loadEl.style.display = 'none';
+    errEl.style.display  = 'block';
     return;
   }
-  if(_schedLoaded)return;
-  try{
-    const data=await fetch(`${WORKER}?type=schedule`).then(r=>r.json());
-    const winners={};
-    (data.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
-    renderScheduleTable(winners);
-    document.getElementById('sched-upd').textContent='Champions auto-updated from ESPN · '+new Date().toLocaleTimeString();
-    _schedLoaded=true;
-  }catch(e){document.getElementById('sched-upd').textContent='Could not load champion data.'}
+
+  // sort by earnings desc
+  const sorted = [...rosters].map(t => {
+    const total = t.players.reduce((s,p) => s + (earningsMap[p]||0), 0);
+    return { ...t, total };
+  }).sort((a,b) => b.total - a.total);
+
+  grid.innerHTML = sorted.map(t => `
+    <div class="team-card">
+      <div class="team-header">
+        <div class="team-owner">${t.owner}</div>
+        <div class="team-earnings">${t.total > 0 ? '$' + t.total.toLocaleString() + ' earned · ' + (t.total/100000).toFixed(1) + ' pts' : 'Season earnings loading…'}</div>
+      </div>
+      <ul class="team-players">
+        ${t.players.map(p => {
+          const earn = earningsMap[p] || 0;
+          return `<li>
+            <span>${p}</span>
+            ${earn > 0 ? `<span class="player-earn">$${(earn/1000).toFixed(0)}K</span>` : ''}
+          </li>`;
+        }).join('')}
+      </ul>
+    </div>`).join('');
+
+  loadEl.style.display = 'none';
+  grid.style.display   = 'grid';
 }
 
-function renderScheduleTable(winners){
-  document.getElementById('sched-rows').innerHTML=SCHEDULE.map(ev=>{
-    const rc=ev.major?'maj-row':ev.tourChamp?'tc-row':'';
-    const tag=ev.major?'<span class="maj-tag">Major</span>':ev.tourChamp?'<span class="tc-tag">FedEx Cup</span>':'';
-    const winner=winners[norm(ev.espn)]||winners[norm(ev.name)]||null;
-    const owner=winner?getOwner(winner):null;
-    const champCell=winner?`<span class="champ">${winner}</span>${owner?`<span style="font-size:11px;color:var(--gray-mid);margin-left:6px">(${owner.split(' ')[0]})</span>`:''}` :'<span style="color:var(--gray-mid);font-size:12px">—</span>';
-    return`<tr class="${rc}">
-      <td class="c mono" style="font-size:12px;color:var(--gray-mid)">${ev.num}</td>
-      <td><strong>${ev.name}</strong>${tag}</td>
-      <td style="white-space:nowrap;font-size:13px;color:var(--gray-dk)">${ev.dates}</td>
-      <td style="font-size:13px;color:var(--gray-dk)">${ev.course}</td>
-      <td class="c mono" style="font-size:13px;color:var(--navy)">${ev.purse}</td>
-      <td>${champCell}</td>
-    </tr>`;
-  }).join('');
-}
-
-// PAYOUTS
-async function initPayouts(){
-  if(_earnings){hide('pay-load');show('pay-body');renderPayouts();return}
-  show('pay-load');hide('pay-body');hide('pay-err');
-  try{
-    // Load tournament earnings from JSONbin (includes seeded historical + live data)
-    const[binData, schedData]=await Promise.all([
-      fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}}).then(r=>r.json()),
-      fetch(`${WORKER}?type=schedule`).then(r=>r.json()),
-    ]);
-
-    // Build earnings map from stored tournament data
-    const earnMap={};
-    const storedTournaments = binData?.record?.tournaments || [];
-    storedTournaments.forEach(t=>{
-      if(!t.completed) return;
-      Object.entries(t.earnings||{}).forEach(([player,amt])=>{
-        earnMap[norm(player)]=(earnMap[norm(player)]||0)+amt;
-      });
-    });
-
-    // Get schedule winners
-    const winners={};
-    (schedData.tournaments||[]).forEach(t=>{if(t.winner)winners[norm(t.name)]=t.winner;});
-
-    _earnings={earnMap,winners};
-    hide('pay-load');show('pay-body');
-    renderPayouts();
-  }catch(e){console.error(e);hide('pay-load');show('pay-err')}
-}
-
-function renderPayouts(){
-  const{earnMap,winners}=_earnings;
-  const teamData=TEAMS.map(t=>{
-    let pts=0,earn=0;
-    t.players.forEach(name=>{const amt=earnMap[norm(name)]||0;pts+=toPoints(amt);earn+=amt;});
-    return{owner:t.owner,pts,earn};
+/* ─── INIT ───────────────────────────────────── */
+async function init() {
+  await loadRosters();
+  loadEarnings().then(() => {
+    buildStandings();
+    renderTeams();
   });
-  const sorted=[...teamData].sort((a,b)=>b.pts-a.pts);
-  const totalPts=sorted.reduce((s,t)=>s+t.pts,0);
-  // Calculate major bonuses per owner
-  const bonusMap={};
-  const bonusEvsList=[
-    {key:'Masters Tournament',amt:50},{key:'PGA Championship',amt:50},
-    {key:'U.S. Open',amt:50},{key:'The Open Championship',amt:50},{key:'Tour Championship',amt:100}
-  ];
-  bonusEvsList.forEach(ev=>{
-    const winner=winners[norm(ev.key)]||null;
-    const owner=winner?getOwner(winner):null;
-    if(owner){bonusMap[owner]=(bonusMap[owner]||0)+ev.amt;}
-  });
-
-  document.getElementById('standings').innerHTML=sorted.map((t,i)=>{
-    const pct=totalPts>0?t.pts/totalPts:0;
-    const seasonPayout=pct*SEASON_POT;
-    const majorBonus=bonusMap[t.owner]||0;
-    const total=seasonPayout+majorBonus;
-    const barPct=sorted[0].pts>0?Math.round((t.pts/sorted[0].pts)*100):0;
-    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
-    const fmtMoney=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    return`<div class="s-row">
-      <div class="s-rnk ${rc}">${i+1}</div>
-      <div class="s-info">
-        <div class="s-own">${t.owner}</div>
-        <div class="s-sub">${t.pts.toFixed(1)} pts · ${(pct*100).toFixed(1)}% of league</div>
-        <div class="pay-bar"><div class="pay-bar-f" style="width:${barPct}%"></div></div>
-      </div>
-      <div style="display:flex;gap:16px;align-items:center;margin-left:auto;text-align:right">
-        <div>
-          <div style="font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Season</div>
-          <div class="s-pay" style="font-size:15px">${fmtMoney(seasonPayout)}</div>
-        </div>
-        <div>
-          <div style="font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Bonuses</div>
-          <div class="s-pay" style="font-size:15px;color:var(--gold)">${majorBonus>0?fmtMoney(majorBonus):'—'}</div>
-        </div>
-        <div style="border-left:1px solid var(--gray-lt);padding-left:16px">
-          <div style="font-size:10px;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Total</div>
-          <div class="s-pay">${fmtMoney(total)}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('pay-upd').textContent=totalPts===0?'No earnings data yet.':'Auto-updated from ESPN · '+new Date().toLocaleTimeString();
-  const bonusEvs=[
-    {key:'Masters Tournament',    label:'Masters',          amt:50},
-    {key:'PGA Championship',      label:'PGA Championship', amt:50},
-    {key:'U.S. Open',             label:'U.S. Open',        amt:50},
-    {key:'The Open Championship', label:'The Open',         amt:50},
-    {key:'Tour Championship',     label:'Tour Championship',amt:100},
-  ];
-  document.getElementById('bonuses').innerHTML=bonusEvs.map(ev=>{
-    const winner=winners[norm(ev.key)]||null;
-    const owner=winner?getOwner(winner):null;
-    const isTC=ev.amt===100;
-    return`<div class="bon-row ${winner?'won':''}">
-      <div><div class="bon-ev">${ev.label}</div>
-      ${winner?`<div class="bon-ow">🏆 ${winner}${owner?' ('+owner+')':''}</div>`:`<div class="bon-pend">Not yet played</div>`}
-      </div>
-      <div class="bon-amt ${isTC?'tc':''}">$${ev.amt}</div>
-    </div>`;
-  }).join('');
+  loadLive();
+  // auto-refresh live every 3 min
+  setInterval(loadLive, 3 * 60 * 1000);
 }
 
 init();
