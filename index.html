@@ -255,6 +255,7 @@ tbody td.c { text-align: center; }
 }
 .team-players li:last-child { border-bottom: none; }
 .player-earn { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green-dk); font-weight: 500; }
+.playing-dot { color: var(--green); font-size: 10px; flex-shrink: 0; }
 
 /* ── RESPONSIVE ── */
 @media(max-width:1000px){ .teams-grid { grid-template-columns: repeat(2,1fr); } }
@@ -467,6 +468,8 @@ async function loadLive() {
     const tbody = document.getElementById('scoring-tbody');
     tbody.innerHTML = '';
     const players = lbData.players || [];
+    thisWeekField = new Set(players.map(p => p.name));
+    renderTeams(); // refresh dots
     players.forEach(p => {
       const owner = ownerOf(p.name);
       const isCut = p.isCut || p.isWD;
@@ -501,6 +504,8 @@ async function loadLive() {
   }
 }
 
+let thisWeekField = new Set(); // player names in current tournament field
+
 /* ─── TEAMS TAB ──────────────────────────────── */
 function renderTeams() {
   const grid  = document.getElementById('teams-grid');
@@ -513,13 +518,21 @@ function renderTeams() {
     return;
   }
 
+  const norm = n => n.toLowerCase().replace(/[^a-z]/g, '');
+
   grid.innerHTML = rosters.map(t => `
     <div class="team-card">
       <div class="team-header">
         <div class="team-owner">${t.owner}</div>
       </div>
       <ul class="team-players">
-        ${t.players.map(p => `<li>${p}</li>`).join('')}
+        ${t.players.map(p => {
+          const playing = [...thisWeekField].some(f => norm(f) === norm(p));
+          return `<li>
+            <span>${p}</span>
+            ${playing ? '<span class="playing-dot" title="Playing this week">⬤</span>' : ''}
+          </li>`;
+        }).join('')}
       </ul>
     </div>`).join('');
 
@@ -530,12 +543,8 @@ function renderTeams() {
 /* ─── INIT ───────────────────────────────────── */
 async function init() {
   await loadRosters();
-  loadEarnings().then(() => {
-    buildStandings();
-    renderTeams();
-  });
-  loadLive();
-  // auto-refresh live every 3 min
+  renderTeams(); // show rosters immediately
+  loadLive();    // loads leaderboard, then re-renders teams with dots
   setInterval(loadLive, 3 * 60 * 1000);
 }
 
