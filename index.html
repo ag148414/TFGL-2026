@@ -502,7 +502,7 @@ async function loadLive() {
       // current round score for the THRU column
       const rdScores = [r1, r2, r3, r4];
       const rdCurrent = rdScores[currentRound - 1] || { txt: '–', cls: '' };
-      const thru = p.thru && p.thru !== '–' ? p.thru : (p.pos && p.pos !== '–' ? 'F' : '–');
+      const thru = p.thru || '–';
       const tr = document.createElement('tr');
       if (owner) tr.classList.add('pool-player');
       if (isCut) tr.classList.add('cut-row');
