@@ -244,7 +244,18 @@ tbody td.c { text-align: center; }
   padding: 10px 14px;
 }
 .team-owner { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--white); font-weight: 700; }
-.team-players { list-style: none; }
+.team-header-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.team-total { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 700; }
+.team-total.under { color: var(--gold); }
+.team-total.over  { color: #a0bfdd; }
+.team-total.even  { color: var(--blue-lt); }
+.player-name-row { display: flex; align-items: center; gap: 6px; }
+.playing-dot { color: var(--green); font-size: 9px; flex-shrink: 0; }
+.playing-dot-empty { display: inline-block; width: 9px; flex-shrink: 0; }
+.p-score { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 700; }
+.p-score.under { color: var(--red); }
+.p-score.over  { color: var(--navy); }
+.p-score.even  { color: var(--gray-dk); }
 .team-players li {
   padding: 7px 14px;
   font-size: 13px;
@@ -471,7 +482,12 @@ async function loadLive() {
     tbody.innerHTML = '';
     const players = lbData.players || [];
     thisWeekField = new Set(players.map(p => p.name));
-    renderTeams(); // refresh dots
+    scoreMap = {};
+    players.forEach(p => {
+      const n = parseInt(p.toPar, 10);
+      scoreMap[p.name] = isNaN(n) ? null : n;
+    });
+    renderTeams();
     players.forEach(p => {
       const owner = ownerOf(p.name);
       const isCut = p.isCut || p.isWD;
@@ -506,7 +522,8 @@ async function loadLive() {
   }
 }
 
-let thisWeekField = new Set(); // player names in current tournament field
+let thisWeekField = new Set();
+let scoreMap = {}; // playerName → numeric toPar
 
 /* ─── TEAMS TAB ──────────────────────────────── */
 function renderTeams() {
@@ -522,21 +539,55 @@ function renderTeams() {
 
   const norm = n => n.toLowerCase().replace(/[^a-z]/g, '');
 
-  grid.innerHTML = rosters.map(t => `
+  // find scoreMap key matching player name
+  function getScore(playerName) {
+    const pn = norm(playerName);
+    for (const [k, v] of Object.entries(scoreMap)) {
+      if (norm(k) === pn) return v;
+    }
+    return null;
+  }
+
+  function fmtScoreTeam(n) {
+    if (n === null) return { txt: '–', cls: '' };
+    if (n < 0)  return { txt: String(n), cls: 'under' };
+    if (n === 0) return { txt: 'E', cls: 'even' };
+    return { txt: '+' + n, cls: 'over' };
+  }
+
+  grid.innerHTML = rosters.map(t => {
+    // team total = sum of scores for players currently in the field
+    let total = 0, counted = 0;
+    t.players.forEach(p => {
+      const s = getScore(p);
+      if (s !== null) { total += s; counted++; }
+    });
+    const teamScore = fmtScoreTeam(counted > 0 ? total : null);
+
+    return `
     <div class="team-card">
       <div class="team-header">
-        <div class="team-owner">${t.owner}</div>
+        <div class="team-header-row">
+          <div class="team-owner">${t.owner}</div>
+          ${counted > 0 ? `<div class="team-total ${teamScore.cls}">${teamScore.txt}</div>` : ''}
+        </div>
       </div>
       <ul class="team-players">
         ${t.players.map(p => {
           const playing = [...thisWeekField].some(f => norm(f) === norm(p));
+          const score = getScore(p);
+          const s = fmtScoreTeam(score);
           return `<li>
-            <span>${p}</span>
-            ${playing ? '<span class="playing-dot" title="Playing this week">⬤</span>' : ''}
+            <span class="player-name-row">
+              ${playing ? '<span class="playing-dot">⬤</span>' : '<span class="playing-dot-empty"></span>'}
+              ${p}
+            </span>
+            ${playing ? `<span class="p-score ${s.cls}">${s.txt}</span>` : ''}
           </li>`;
         }).join('')}
       </ul>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   loadEl.style.display = 'none';
   grid.style.display   = 'grid';
