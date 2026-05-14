@@ -222,6 +222,7 @@ tbody td.c { text-align: center; }
 .score-cell.over  { color: var(--navy); }
 .score-cell.even  { color: var(--gray-dk); }
 .thru-cell { color: var(--gray-dk); font-size: 11px; }
+.hole10-star { color: var(--gray-mid); font-size: 10px; vertical-align: super; }
 .cut-row td { opacity: .5; }
 .last-upd { padding: 10px 16px; font-size: 11px; color: var(--gray-mid); border-top: 1px solid var(--gray-lt); }
 
@@ -507,7 +508,7 @@ async function loadLive() {
       if (isCut) tr.classList.add('cut-row');
       tr.innerHTML = `
         <td class="c pos-cell">${p.pos || '–'}</td>
-        <td class="player-name${owner?' pool':''}">${p.name}</td>
+        <td class="player-name${owner?' pool':''}">${p.name}${p.startedOn10 ? ' <span class="hole10-star" title="Started on hole 10">✱</span>' : ''}</td>
         <td>${owner ? `<span class="team-pill">${owner}</span>` : ''}</td>
         <td class="c score-cell ${tot.cls}">${tot.txt}</td>
         <td class="c score-cell thru-cell">${thru}</td>
