@@ -221,6 +221,7 @@ tbody td.c { text-align: center; }
 .score-cell.under { color: var(--red); font-weight: 700; }
 .score-cell.over  { color: var(--navy); }
 .score-cell.even  { color: var(--gray-dk); }
+.thru-cell { color: var(--gray-dk); font-size: 11px; }
 .cut-row td { opacity: .5; }
 .last-upd { padding: 10px 16px; font-size: 11px; color: var(--gray-mid); border-top: 1px solid var(--gray-lt); }
 
@@ -318,7 +319,7 @@ tbody td.c { text-align: center; }
         <table>
           <thead><tr>
             <th class="c">POS</th><th>PLAYER</th><th>TEAM</th>
-            <th class="c">TOT</th><th class="c">R1</th><th class="c">R2</th><th class="c">R3</th><th class="c">R4</th><th class="c">THRU</th>
+            <th class="c">TOT</th><th class="c">THRU</th><th class="c">RD</th><th class="c">R1</th><th class="c">R2</th><th class="c">R3</th><th class="c">R4</th>
           </tr></thead>
           <tbody id="scoring-tbody"></tbody>
         </table>
@@ -491,11 +492,16 @@ async function loadLive() {
     players.forEach(p => {
       const owner = ownerOf(p.name);
       const isCut = p.isCut || p.isWD;
+      const currentRound = lbData.round || 1;
       const tot = fmtScore(p.toPar);
       const r1  = fmtScore(p.r1);
       const r2  = fmtScore(p.r2);
       const r3  = fmtScore(p.r3);
       const r4  = fmtScore(p.r4);
+      // current round score for the THRU column
+      const rdScores = [r1, r2, r3, r4];
+      const rdCurrent = rdScores[currentRound - 1] || { txt: '–', cls: '' };
+      const thru = p.thru && p.thru !== '–' ? p.thru : (p.pos && p.pos !== '–' ? 'F' : '–');
       const tr = document.createElement('tr');
       if (owner) tr.classList.add('pool-player');
       if (isCut) tr.classList.add('cut-row');
@@ -504,11 +510,12 @@ async function loadLive() {
         <td class="player-name${owner?' pool':''}">${p.name}</td>
         <td>${owner ? `<span class="team-pill">${owner}</span>` : ''}</td>
         <td class="c score-cell ${tot.cls}">${tot.txt}</td>
+        <td class="c score-cell thru-cell">${thru}</td>
+        <td class="c score-cell ${rdCurrent.cls}">${rdCurrent.txt}</td>
         <td class="c score-cell">${r1.txt}</td>
         <td class="c score-cell">${r2.txt}</td>
         <td class="c score-cell">${r3.txt}</td>
-        <td class="c score-cell">${r4.txt}</td>
-        <td class="c score-cell">${p.thru || '–'}</td>`;
+        <td class="c score-cell">${r4.txt}</td>`;
       tbody.appendChild(tr);
     });
 
