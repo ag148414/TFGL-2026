@@ -508,10 +508,10 @@ async function loadLive() {
       if (isCut) tr.classList.add('cut-row');
       tr.innerHTML = `
         <td class="c pos-cell">${p.pos || '–'}</td>
-        <td class="player-name${owner?' pool':''}">${p.name}${p.startedOn10 ? ' <span class="hole10-star" title="Started on hole 10">✱</span>' : ''}</td>
+        <td class="player-name${owner?' pool':''}">${p.name}</td>
         <td>${owner ? `<span class="team-pill">${owner}</span>` : ''}</td>
         <td class="c score-cell ${tot.cls}">${tot.txt}</td>
-        <td class="c score-cell thru-cell">${thru}</td>
+        <td class="c score-cell thru-cell">${thru}${p.startedOn10 ? '<span class="hole10-star" title="Started on hole 10">✱</span>' : ''}</td>
         <td class="c score-cell">${r1.txt}</td>
         <td class="c score-cell">${r2.txt}</td>
         <td class="c score-cell">${r3.txt}</td>
