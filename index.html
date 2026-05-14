@@ -319,7 +319,7 @@ tbody td.c { text-align: center; }
         <table>
           <thead><tr>
             <th class="c">POS</th><th>PLAYER</th><th>TEAM</th>
-            <th class="c">TOT</th><th class="c">THRU</th><th class="c">RD</th><th class="c">R1</th><th class="c">R2</th><th class="c">R3</th><th class="c">R4</th>
+            <th class="c">TOT</th><th class="c">THRU</th><th class="c">R1</th><th class="c">R2</th><th class="c">R3</th><th class="c">R4</th>
           </tr></thead>
           <tbody id="scoring-tbody"></tbody>
         </table>
@@ -511,7 +511,6 @@ async function loadLive() {
         <td>${owner ? `<span class="team-pill">${owner}</span>` : ''}</td>
         <td class="c score-cell ${tot.cls}">${tot.txt}</td>
         <td class="c score-cell thru-cell">${thru}</td>
-        <td class="c score-cell ${rdCurrent.cls}">${rdCurrent.txt}</td>
         <td class="c score-cell">${r1.txt}</td>
         <td class="c score-cell">${r2.txt}</td>
         <td class="c score-cell">${r3.txt}</td>
